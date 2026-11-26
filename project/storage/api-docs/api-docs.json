@@ -1,0 +1,64 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Bank Statement Analyzer API",
+        "description": "API สำหรับอ่านและวิเคราะห์ไฟล์ PDF Bank Statement ภาษาอังกฤษ พร้อมตรวจสอบเงินหมุนเวียนและความถูกต้องของเอกสาร",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/v1/statements/analyze": {
+            "post": {
+                "summary": "วิเคราะห์ไฟล์ PDF Bank Statement (ภาษาอังกฤษ)",
+                "operationId": "55cf164f6df7e64ffb40eecd15506dd6",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "bank_code",
+                                    "file"
+                                ],
+                                "properties": {
+                                    "bank_code": {
+                                        "description": "เลือกธนาคารของไฟล์ Statement",
+                                        "type": "string",
+                                        "example": "ttb",
+                                        "enum": [
+                                            "ttb",
+                                            "kbank",
+                                            "scb",
+                                            "bbl",
+                                            "ktb",
+                                            "bay"
+                                        ]
+                                    },
+                                    "file": {
+                                        "description": "ไฟล์ e-Statement ภาษาอังกฤษ (PDF เท่านั้น ขนาดไม่เกิน 10MB)",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "password": {
+                                        "description": "รหัสผ่านเปิดไฟล์ PDF (ถ้ามี ระบบจะไม่เก็บรหัสผ่านนี้ไว้)",
+                                        "type": "string",
+                                        "example": "11111985",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "วิเคราะห์สำเร็จและบันทึกข้อมูลแล้ว"
+                    },
+                    "422": {
+                        "description": "อายุไม่ถึง 3 เดือน, เลือกธนาคารไม่ตรงกับไฟล์ หรือไม่สามารถอ่านไฟล์ PDF ได้"
+                    }
+                }
+            }
+        }
+    }
+}
